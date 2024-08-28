@@ -18,7 +18,7 @@ ENV  PATH $PATH:$HADOOP_HOME/bin
 ENV  HADOOP_CONF_DIR /usr/local/hadoop/etc/hadoop
 
 RUN ssh-keygen -t rsa -f ~/.ssh/id_rsa -P '' && \
-    cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+	cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 
 COPY conf/* /tmp/
 
@@ -27,7 +27,7 @@ RUN mv /tmp/core-site.xml /usr/local/hadoop/etc/hadoop/core-site.xml
 RUN mv /tmp/mapred-site.xml /usr/local/hadoop/etc/hadoop/mapred-site.xml
 RUN mv /tmp/hdfs-site.xml /usr/local/hadoop/etc/hadoop/hdfs-site.xml
 RUN mv /tmp/masters /usr/local/hadoop/etc/hadoop/masters
-RUN mv /tmp/slaves /usr/local/hadoop/etc/hadoop/slaves
+RUN mv /tmp/workers /usr/local/hadoop/etc/hadoop/workers
 
 RUN /tmp/env.sh
 

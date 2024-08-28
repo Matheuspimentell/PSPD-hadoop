@@ -21,9 +21,9 @@ do
     echo "Exporting slave$i to salves file..."
     if [ $i -eq 1 ]
     then
-        echo "slave$i" > ./conf/slaves
+        echo "slave$i" > ./conf/workers
     else
-        echo "slave$i" >> ./conf/slaves
+        echo "slave$i" >> ./conf/workers
     fi
 done
 
@@ -44,9 +44,10 @@ docker run -itd --network="hadoopNetwork"  --ip 172.25.0.100  -p 9870:9870  -p 8
 
 for (( c=1; c<=$slaveCount; c++ ))
 do
-    tmpName="slave$c"
-    #run base-hadoop:1.0 image  as slave container
-    docker run --rm -itd --network="hadoopNetwork" --ip "172.25.0.10$c" --name $tmpName --hostname $tmpName base-hadoop:1.0
+	echo "starting slave $c..."	
+  tmpName="slave$c"
+  #run base-hadoop:1.0 image  as slave container
+  docker run --rm -itd --network="hadoopNetwork" --ip "172.25.0.10$c" --name $tmpName --hostname $tmpName base-hadoop:1.0
 done
 
 # Copy word generator to master nod
@@ -55,3 +56,7 @@ docker cp ${localdir}/generator.py master:/generator.py
 #run hadoop commands
 docker exec -it master bash -c "hadoop namenode -format && /usr/local/hadoop/sbin/start-dfs.sh && /usr/local/hadoop/sbin/start-yarn.sh"
 docker exec -it master bash
+
+# 172.25.0.101    slave1
+# 172.25.0.102    slave2
+# 172.25.0.103    slave3
