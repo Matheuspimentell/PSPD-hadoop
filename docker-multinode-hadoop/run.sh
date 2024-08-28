@@ -18,7 +18,7 @@ echo "$slaveCount slave and 1 master  container will be created..."
 #add all slave containers name  to slaves file
 for (( i=1; i<=$slaveCount; i++ ))
 do
-    echo "Exporting slave$i to salves file..."
+    echo "Exporting slave$i to workers file..."
     if [ $i -eq 1 ]
     then
         echo "slave$i" > ./conf/workers
@@ -26,6 +26,9 @@ do
         echo "slave$i" >> ./conf/workers
     fi
 done
+
+# Add master node to workers file
+echo "master" >> ./conf/workers
 
 #Create a network named "hadoopNetwork"
 if [ ! "$(docker network list | grep hadoopNetwork)" ]; then
@@ -44,7 +47,7 @@ docker run -itd --network="hadoopNetwork"  --ip 172.25.0.100  -p 9870:9870  -p 8
 
 for (( c=1; c<=$slaveCount; c++ ))
 do
-	echo "starting slave $c..."	
+	echo "starting slave $c..."
   tmpName="slave$c"
   #run base-hadoop:1.0 image  as slave container
   docker run --rm -itd --network="hadoopNetwork" --ip "172.25.0.10$c" --name $tmpName --hostname $tmpName base-hadoop:1.0
